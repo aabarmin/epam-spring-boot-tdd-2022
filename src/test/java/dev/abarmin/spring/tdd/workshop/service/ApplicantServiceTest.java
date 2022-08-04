@@ -113,12 +113,12 @@ class ApplicantServiceTest {
   void getApplicant_shouldUseRepository() {
     final UUID applicantId = UUID.randomUUID();
 
-    when(repository.getApplicantById(eq(applicantId))).thenReturn(Optional.of(Applicant.builder()
+    when(repository.findById(eq(applicantId))).thenReturn(Optional.of(Applicant.builder()
         .build()));
 
     final Optional<Applicant> optionalApplicant = service.getApplicant(applicantId);
 
-    verify(repository, times(1)).getApplicantById(eq(applicantId));
+    verify(repository, times(1)).findById(eq(applicantId));
 
     assertThat(optionalApplicant)
         .isNotNull()

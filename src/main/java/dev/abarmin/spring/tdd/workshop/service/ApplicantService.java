@@ -24,7 +24,7 @@ public class ApplicantService {
   }
 
   public Optional<Applicant> getApplicant(@NotNull final UUID applicantId) {
-    return applicantRepository.getApplicantById(applicantId);
+    return applicantRepository.findById(applicantId);
   }
 
   public Optional<Applicant> getApplicant(@NotNull @Email final String applicantEmail) {
