@@ -11,4 +11,6 @@ public interface ApplicantRepository {
   Applicant save(Applicant applicant);
 
   Optional<Applicant> getApplicantById(UUID applicantId);
+
+  Optional<Applicant> getApplicantByEmail(String email);
 }

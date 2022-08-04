@@ -2,6 +2,7 @@ package dev.abarmin.spring.tdd.workshop.service;
 
 import dev.abarmin.spring.tdd.workshop.model.Applicant;
 import dev.abarmin.spring.tdd.workshop.model.ContactPoint;
+import dev.abarmin.spring.tdd.workshop.model.ElectronicAddress;
 import dev.abarmin.spring.tdd.workshop.model.Person;
 import dev.abarmin.spring.tdd.workshop.model.PersonName;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +20,7 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,6 +77,9 @@ class ApplicantServiceTest {
                 .build())
             .build())
         .contactPoint(ContactPoint.builder()
+            .electronicAddress(ElectronicAddress.builder()
+                .email("email@test.com")
+                .build())
             .build())
         .build();
 
@@ -118,5 +124,35 @@ class ApplicantServiceTest {
         .isNotNull()
         .isPresent()
         .withFailMessage("No applicant returned");
+  }
+
+  @Test
+  void getApplicant_shouldReturnByEmail() {
+    final Applicant applicant = Applicant.builder()
+        .contactPoint(ContactPoint.builder()
+            .electronicAddress(ElectronicAddress.builder()
+                .email("test@email.com")
+                .build())
+            .build())
+        .build();
+
+    when(repository.getApplicantByEmail(anyString())).thenReturn(Optional.of(applicant));
+
+    final Optional<Applicant> byEmail = service.getApplicant("test@email.com");
+
+    assertThat(byEmail)
+        .isNotNull()
+        .isPresent()
+        .withFailMessage("Applicant wasn't returned");
+
+    final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+
+    verify(repository, times(1)).getApplicantByEmail(stringCaptor.capture());
+
+    final String actualArgument = stringCaptor.getValue();
+
+    assertThat(actualArgument)
+        .isEqualTo("test@email.com")
+        .withFailMessage("Wrong email used on mock");
   }
 }
