@@ -14,7 +14,7 @@
 	<name>workshop</name>
 	<description>Example for Spring Boot TDD workshop</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
