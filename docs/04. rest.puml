@@ -1,0 +1,15 @@
+@startuml REST Endpoints
+
+class ApplicantController {
+    - applicantService: ApplicantService
+
+    + getApplicant(UUID): ResponseEntity<Applicant>
+    + createApplicant(Applicant): ResponseEntity<Applicant>
+    + updateApplicant(Applicant): ResponseEntity<Applicant>
+}
+
+class ApplicantService 
+
+ApplicantController <- ApplicantService
+
+@enduml

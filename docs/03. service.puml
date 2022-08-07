@@ -1,0 +1,21 @@
+@startuml Service layer
+
+class ApplicantService {
+    - applicantRepository: ApplicantRepository
+
+    + getApplicant(UUID): Optional<Applicant>
+    + save(Applicant): Applicant
+}
+
+interface ApplicantRepository {
+    + findById(UUID): Optional<Applicant>
+    + findByEmail(String): Optional<Applicant>
+    + save(Applicant): Applicant
+}
+
+class Applicant
+
+ApplicantService <- ApplicantRepository
+ApplicantService <.. Applicant
+
+@enduml

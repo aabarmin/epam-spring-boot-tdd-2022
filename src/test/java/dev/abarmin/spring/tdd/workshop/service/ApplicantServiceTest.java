@@ -70,6 +70,32 @@ class ApplicantServiceTest {
   }
 
   @Test
+  void save_shouldThrowExceptionIfEmailDuplicates() {
+    final Applicant applicant = Applicant.builder()
+        .person(Person.builder()
+            .personName(PersonName.builder()
+                .build())
+            .build())
+        .contactPoint(ContactPoint.builder()
+            .electronicAddress(ElectronicAddress.builder()
+                .email("test@email.com")
+                .build())
+            .build())
+        .build();
+
+    when(repository.getApplicantByEmail(eq("test@email.com"))).thenReturn(Optional.of(
+        Applicant.builder().build()
+    ));
+
+    assertThatThrownBy(() -> {
+      service.save(applicant);
+    })
+        .isInstanceOf(ApplicantExistsException.class);
+
+    verify(repository, times(1)).getApplicantByEmail(eq("test@email.com"));
+  }
+
+  @Test
   void save_shouldReturnTheValue() {
     final Applicant applicant = Applicant.builder()
         .person(Person.builder()
@@ -124,35 +150,5 @@ class ApplicantServiceTest {
         .isNotNull()
         .isPresent()
         .withFailMessage("No applicant returned");
-  }
-
-  @Test
-  void getApplicant_shouldReturnByEmail() {
-    final Applicant applicant = Applicant.builder()
-        .contactPoint(ContactPoint.builder()
-            .electronicAddress(ElectronicAddress.builder()
-                .email("test@email.com")
-                .build())
-            .build())
-        .build();
-
-    when(repository.getApplicantByEmail(anyString())).thenReturn(Optional.of(applicant));
-
-    final Optional<Applicant> byEmail = service.getApplicant("test@email.com");
-
-    assertThat(byEmail)
-        .isNotNull()
-        .isPresent()
-        .withFailMessage("Applicant wasn't returned");
-
-    final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-
-    verify(repository, times(1)).getApplicantByEmail(stringCaptor.capture());
-
-    final String actualArgument = stringCaptor.getValue();
-
-    assertThat(actualArgument)
-        .isEqualTo("test@email.com")
-        .withFailMessage("Wrong email used on mock");
   }
 }

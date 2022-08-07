@@ -1,0 +1,55 @@
+@startuml Class diagram
+
+entity Applicant {
+    - applicantId: UUID
+    - person: Person
+    - contactPoint: ContactPoint
+}
+
+note left
+    person - Not null
+    contactPoint - Not null
+end note
+
+entity Person {
+    - personName: PersonName
+}
+
+note left
+    personName - Not null
+end note
+
+entity PersonName {
+    - firstName: String
+    - middleName: String
+    - lastName: String
+}
+
+note left
+    firstName - Not empty, 2-50 chars, letters only
+    middleName - Not empty, 2-50 chars, letters only
+    lastName - Not empty, 2-50 chars, letters only
+end note
+
+entity ContactPoint {
+    - electronicAddress: ElectronicAddress
+}
+
+note left
+    electronicAddress - Not null
+end note
+
+entity ElectronicAddress {
+    - email: String
+}
+
+note left
+    email - Not empty, email
+end note
+
+Applicant <-down- Person
+Applicant <-down- ContactPoint
+Person <-down- PersonName
+ContactPoint <-down- ElectronicAddress
+
+@enduml

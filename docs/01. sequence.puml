@@ -1,0 +1,37 @@
+@startuml
+
+actor Client as client
+participant "REST Controller" as controller
+participant "Service" as service
+participant "Repository" as repository
+database "Database" as database
+
+client -> controller: Request with JSON body
+  controller -> controller: Validate the request
+  alt Not a valid JSON
+    controller -> client: 401 Bad Request
+  else
+    controller -> service: Request DTO
+      
+      service -> repository: Get an applicant by email
+        repository -> database: SQL Query
+        database -> repository: Result set
+      repository -> service: Result
+      
+      alt participant exists
+        service -> controller: Throws an exception
+        controller -> client: 409 Conflict
+      else participant does not exist
+        service -> repository: Save a new participant
+          repository -> database: SQL Query
+          database -> repository: Result set
+        repository -> service: Saved entity
+        
+        service -> controller: Saved entity
+      end
+      
+    controller -> client: 201 Created
+  end
+
+
+@enduml
