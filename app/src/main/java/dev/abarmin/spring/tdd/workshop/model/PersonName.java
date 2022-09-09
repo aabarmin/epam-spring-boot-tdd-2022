@@ -1,6 +1,5 @@
 package dev.abarmin.spring.tdd.workshop.model;
 
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,6 @@ package dev.abarmin.spring.tdd.workshop.service;
 
 import dev.abarmin.spring.tdd.workshop.model.Applicant;
 import java.util.Optional;
-import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
